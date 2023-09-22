@@ -229,9 +229,9 @@ def specifications_generator(df):
     result.to_csv('PA-results.csv', index=False)  
     st.subheader("Specifications")
     st.dataframe(result)
-    final_result=pd.read_csv('PA-results.csv',usecols=['CO Level123 Code','Level','Code','Name','Description','Prompt A','L1 Description','L1 title','L1 Intended Results','L1 Artefact Description','L1 Specifications'])
+    # final_result=pd.read_csv('PA-results.csv',usecols=['CO Level123 Code','Level','Code','Name','Description','Prompt A','L1 Description','L1 title','L1 Intended Results','L1 Artefact Description','L1 Specifications'])
     
-    st.markdown(get_download_link(final_result), unsafe_allow_html=True)
+    st.markdown(get_download_link(result), unsafe_allow_html=True)
     
 
 
