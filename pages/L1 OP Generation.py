@@ -142,7 +142,7 @@ def l1_title_generator(df):
     data13 = pd.read_csv(r'data13.csv',encoding='cp1252',names=['L1 title'])
     results = pd.concat([df, data13], axis=1)
     results.to_csv("PA-results.csv")
-    st.subheader("Description Result")
+    st.subheader("Title Result")
     st.dataframe(results)   
 
 def intended_results_generator(df):
@@ -229,7 +229,7 @@ def specifications_generator(df):
     result.to_csv('PA-results.csv', index=False)  
     st.subheader("Specifications")
     st.dataframe(result)
-    final_result=pd.read_csv('PA-results.csv',usecols=['CO Level123 Code','Level','Code','Name','Description','Prompt A','L1 Description','L1 title','L1 Intended Results',' L1 Artefact Description','L1 Specifications'])
+    final_result=pd.read_csv('PA-results.csv',usecols=['CO Level123 Code','Level','Code','Name','Description','Prompt A','L1 Description','L1 title','L1 Intended Results','L1 Artefact Description','L1 Specifications'])
     
     st.markdown(get_download_link(final_result), unsafe_allow_html=True)
     
