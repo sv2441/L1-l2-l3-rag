@@ -53,7 +53,7 @@ def prompta_generator(df):
     #####output parser #############################################
 
     Action_schema = ResponseSchema(name="Actionable",
-                                description="Actionable requirements from the text")
+                                description="List of Actionable requirements from the text")
 
     response_schemas = [ Action_schema]
     output_parser = StructuredOutputParser.from_response_schemas(response_schemas)
@@ -74,11 +74,14 @@ def prompta_generator(df):
         response = chat_llm(messages)
         response_as_dict = output_parser.parse(response.content)
         data = response_as_dict
-        # convert_dict_to_csv(data)
-        dict_to_csv(data, 'data11.csv', append=True)
-    data11 = pd.read_csv(r'data11.csv',encoding='utf-8',names=['Prompt A'])
-    results = pd.concat([df, data11], axis=1)
-    results.to_csv('PA-results.csv', mode='a', header=not os.path.isfile('results.csv'), index=False)
+        convert_dict_to_csv(data)
+        test=pd.DataFrame(df.iloc[index]).T
+        data11 = pd.read_csv(r'data11.csv',encoding='cp1252')
+        results = pd.concat([test, data11], axis=1).fillna(0)
+        # result.to_csv('final1.csv')
+        # test=pd.DataFrame(df.iloc[0]).T
+        # results = pd.concat([test, data11], axis=1).fillna(0)
+        results.to_csv('PA-results.csv', mode='a', header=not os.path.isfile('PA-results.csv'), index=False)
     st.subheader("OP's")
     st.dataframe(results)
 
@@ -105,7 +108,7 @@ def description_generator(df):
     prompt = ChatPromptTemplate.from_template(template=title_template)
     
     for index, row in df.iterrows():
-        messages = prompt.format_messages(topic=row["Prompt A"], format_instructions=format_instructions)
+        messages = prompt.format_messages(topic=row["Activity"], format_instructions=format_instructions)
         response = chat_llm(messages)
         response_as_dict = output_parser.parse(response.content)
         data = response_as_dict
