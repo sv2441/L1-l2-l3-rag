@@ -39,7 +39,25 @@ def dict_to_csv2(data, filename, append=False):
         if not append:
             writer.writeheader()
         writer.writerow({'L1 Intended Results': data})       
-        
+
+
+def convert_dict_to_csv(data_dict):
+    with open('data11.csv', 'w', newline='') as csvfile:
+        fieldnames = ['Pre/Post', 'Activity']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        # Check if the file is empty and write the header only if it's empty
+        is_file_empty = csvfile.tell() == 0
+        if is_file_empty:
+            writer.writeheader()
+
+        for key, value in data_dict.items():
+            if isinstance(value, list):
+                for item in value:
+                    writer.writerow({'Pre/Post': key, 'Activity': item})
+            else:
+                writer.writerow({'Pre/Post': key, 'Activity': value})
+
 def get_download_link(df):
     csv = df.to_csv(index=False)
     b64 = base64.b64encode(csv.encode()).decode()
