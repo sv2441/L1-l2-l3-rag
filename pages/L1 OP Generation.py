@@ -13,7 +13,7 @@ from langchain.prompts import ChatPromptTemplate
 import csv
 import os
 import base64
-
+from langchain.output_parsers import OutputFixingParser
 
 load_dotenv()
 
