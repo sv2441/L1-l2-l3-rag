@@ -12,6 +12,7 @@ st.title("👨‍💻 OP Generation")
 
 
 embedded_code = """
-https://www.canva.com/design/DAFvushARmE/watch; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<iframe src="https://www.canva.com/design/DAFvushARmE/watch" width="768" height="432" frameborder="0" allowfullscreen="true"></iframe>
 """
 st.markdown(embedded_code, unsafe_allow_html=True)
+
