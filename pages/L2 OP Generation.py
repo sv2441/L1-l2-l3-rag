@@ -21,6 +21,7 @@ os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
 # os.environ["OPENAI_API_KEY"] = os.getenv('OPENAI_API_KEY')
     
+    
 chat_llm = ChatOpenAI(temperature=0.6)
 
 
@@ -46,7 +47,22 @@ def get_download_link(df):
     href = f'<a href="data:file/csv;base64,{b64}" download="PA-results.csv">Download CSV File</a>'
     return href
 
+def convert_dict_to_csv(data_dict):
+    with open('data21.csv', 'w', newline='') as csvfile:
+        fieldnames = ['Pre', 'Activity']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
+        # Check if the file is empty and write the header only if it's empty
+        is_file_empty = csvfile.tell() == 0
+        if is_file_empty:
+            writer.writeheader()
+
+        for key, value in data_dict.items():
+            if isinstance(value, list):
+                for item in value:
+                    writer.writerow({'Pre': key, 'Activity': item})
+            else:
+                writer.writerow({'Pre': key, 'Activity': value})
 
 # def prompta_generator(df):
     
@@ -120,18 +136,18 @@ def description_generator(df):
     
 def l2_title_generator(df):
     
-    Action_schema = ResponseSchema(name="Action",
-                            description="Summarize actionable in max of 10 words")
+    Action_schema = ResponseSchema(name="Actionable",
+                                description="List of Actionable requirements from the text")
 
     response_schemas = [ Action_schema]
     output_parser = StructuredOutputParser.from_response_schemas(response_schemas)
     format_instructions = output_parser.get_format_instructions()
-
+    new_parser = OutputFixingParser.from_llm(parser=output_parser, llm=ChatOpenAI())
+    
     title_template = """ \ You are an AI Governance bot.
-                    Generate Governance actionable relating to the following "{topic}" in max 10 words. 
+                    Generate Governance List of Governance actionable relating to the following "{topic}". 
                     Ensure that the output has an action word. 
-                    Use words like establish, define, create, execute, perform, provide, validate, approve, review, monitor as action words
-
+                    Use words like establish, define, create, execute, perform, provide, validate, approve, review, monitor as action words.
                     {format_instructions}
                     """
     prompt = ChatPromptTemplate.from_template(template=title_template)
@@ -140,16 +156,15 @@ def l2_title_generator(df):
     for index, row in df.iterrows():
         messages = prompt.format_messages(topic=row['L1 title'], format_instructions=format_instructions)
         response = chat_llm(messages)
-        response_as_dict = output_parser.parse(response.content)
+        response_as_dict = new_parser.parse(response.content)
         data = response_as_dict
-        # convert_dict_to_csv(data)
-        dict_to_csv(data, 'data21.csv', append=True)
-        # test=pd.DataFrame(df.iloc[index]).T
-    data11 = pd.read_csv(r'data21.csv',encoding='cp1252',names=['L2 title'])
-    results = pd.concat([df, data11], axis=1)
-    results.to_csv("PA-results.csv")
+        convert_dict_to_csv(data)
+        test=pd.DataFrame(df.iloc[index]).T
+        data21 = pd.read_csv(r'data21.csv',encoding='cp1252')
+        results = pd.concat([test, data21], axis=1).fillna(0)
+        results.to_csv('PA-results.csv', mode='a', header=not os.path.isfile('PA-results.csv'), index=False)
     st.subheader("L2 Title Result")
-    st.dataframe(results)   
+    st.dataframe(results)  
 
 def intended_results_generator(df):
     intended_results_schema = ResponseSchema(name="Intended Results",
@@ -209,7 +224,7 @@ def artefact_description_generator(df):
     result.to_csv('PA-results.csv')
     st.subheader("Artefact Description")
     st.dataframe(result)
-    st.markdown(get_download_link(result), unsafe_allow_html=True)
+    # st.markdown(get_download_link(result), unsafe_allow_html=True)
     
     
 def specifications_generator(df):
@@ -222,6 +237,7 @@ def specifications_generator(df):
 
     title_template = """ \ You are an AI Governance bot.
                 List any specific conditions or considerations mentioned in the following "{topic}".
+                Do not generalize. Do not exhibit any prior knowledge other than content provided above. Mention "no" in case there are no conditions
                 """
 
     prompt = ChatPromptTemplate.from_template(template=title_template)
@@ -236,9 +252,9 @@ def specifications_generator(df):
     result.to_csv('PA-results.csv', index=False)    
     st.subheader("Specifications")
     st.dataframe(result)
-    final_result=pd.read_csv('PA-results.csv',usecols=['CO Level123 Code','Level','Code','Name','Description','Prompt A','L1 Description','L1 title','L1 Intended Results','L1 Artefact Description','L1 Specifications','L2 Description','L2 title','L2 Intended Results','L2 Artefact Description','L2 Specifications'])
+    # final_result=pd.read_csv('PA-results.csv',usecols=['CO Level123 Code','Level','Code','Name','Description','Prompt A','L1 Description','L1 title','L1 Intended Results','L1 Artefact Description','L1 Specifications','L2 Description','L2 title','L2 Intended Results','L2 Artefact Description','L2 Specifications'])
     
-    st.markdown(get_download_link(final_result), unsafe_allow_html=True)
+    st.markdown(get_download_link(result), unsafe_allow_html=True)
     
 
 
@@ -251,15 +267,15 @@ def main():
 
     if file is not None:
         # Read CSV file
-        df = pd.read_csv(file)
+        L2_df = pd.read_csv(file)
 
         # Display preview
         st.subheader("CSV File Preview")
-        st.dataframe(df)
+        st.dataframe(L2_df)
 
         
         if st.button("Generate Title"):
-            l2_title_generator(pd.read_csv('PA-results.csv'))
+            l2_title_generator(L2_df)
             
         if st.button("Generate Description"):
             description_generator(pd.read_csv('PA-results.csv'))
