@@ -154,7 +154,7 @@ def l2_title_generator(df):
    
     
     for index, row in df.iterrows():
-        messages = prompt.format_messages(topic=row['L1 title'], format_instructions=format_instructions)
+        messages = prompt.format_messages(topic=row['L1 Title'], format_instructions=format_instructions)
         response = chat_llm(messages)
         response_as_dict = new_parser.parse(response.content)
         data = response_as_dict
