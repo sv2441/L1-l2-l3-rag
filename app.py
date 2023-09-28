@@ -12,6 +12,6 @@ st.title("👨‍💻 OP Generation")
 
 
 embedded_code = """
-<iframe width="560" height="315" src="https://www.youtube.com/embed/2LUJIUHLvhs?si=AcztUwcgaevRDP5n" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+https://www.canva.com/design/DAFvushARmE/watch; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 """
 st.markdown(embedded_code, unsafe_allow_html=True)
