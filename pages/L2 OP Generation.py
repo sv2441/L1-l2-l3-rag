@@ -146,7 +146,7 @@ def l2_title_generator(df):
     
     title_template = """ \ You are an AI Governance bot.
                     Generate Governance List of Governance actionable relating to the following "{topic}". 
-                    Ensure that the output has an action word. 
+                    EEnsure that the output has only one action verb. 
                     Use words like establish, define, create, execute, perform, provide, validate, approve, review, monitor as action words.
                     {format_instructions}
                     """
