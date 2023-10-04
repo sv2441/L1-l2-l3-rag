@@ -163,7 +163,7 @@ def l2_title_generator(df):
         data21 = pd.read_csv(r'data21.csv',encoding='cp1252')
         results = pd.concat([test, data21], axis=1).fillna(0)
         results.to_csv('PA-results.csv', mode='a', header=not os.path.isfile('PA-results.csv'), index=False)
-    results=pd.read_csv("PA-results.csv")
+    results=pd.read_csv("PA-results.csv", sep='delimiter')
     st.subheader("L2 Title Result")
     st.dataframe(results)  
     st.markdown(get_download_link(results), unsafe_allow_html=True)
