@@ -81,7 +81,7 @@ def prompta_generator(df):
         # test=pd.DataFrame(df.iloc[0]).T
         # results = pd.concat([test, data11], axis=1).fillna(0)
         results.to_csv('PA-results.csv', mode='a', header=not os.path.isfile('PA-results.csv'), index=False)
-    results=pd.read_csv("PA-results.csv" , usecols=["Regulatory text","Actionables"]
+    results=pd.read_csv("PA-results.csv" , usecols=["Regulatory text","Actionables"])
     st.subheader("OP's")
     st.dataframe(results)
     st.markdown(get_download_link(results), unsafe_allow_html=True)
