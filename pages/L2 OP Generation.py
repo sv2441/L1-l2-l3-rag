@@ -49,7 +49,7 @@ def get_download_link(df):
 
 def convert_dict_to_csv(data_dict):
     with open('data21.csv', 'w', newline='') as csvfile:
-        fieldnames = ['Pre', 'Activity']
+        fieldnames = ['Pre', 'Actionable']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
         # Check if the file is empty and write the header only if it's empty
@@ -60,9 +60,9 @@ def convert_dict_to_csv(data_dict):
         for key, value in data_dict.items():
             if isinstance(value, list):
                 for item in value:
-                    writer.writerow({'Pre': key, 'Activity': item})
+                    writer.writerow({'Pre': key, 'Actionable': item})
             else:
-                writer.writerow({'Pre': key, 'Activity': value})
+                writer.writerow({'Pre': key, 'Actionable': value})
 
 # def prompta_generator(df):
     
