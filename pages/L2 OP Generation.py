@@ -139,7 +139,7 @@ def l2_title_generator(df):
     Action_schema = ResponseSchema(name="Actionable",
                                 description="List of Actionable requirements from the text")
 
-    response_schemas = [ Action_schema]
+    response_schemas = [Action_schema]
     output_parser = StructuredOutputParser.from_response_schemas(response_schemas)
     format_instructions = output_parser.get_format_instructions()
     new_parser = OutputFixingParser.from_llm(parser=output_parser, llm=ChatOpenAI())
@@ -151,21 +151,28 @@ def l2_title_generator(df):
                     {format_instructions}
                     """
     prompt = ChatPromptTemplate.from_template(template=title_template)
-   
     
+    # Create an empty DataFrame to store results
+    result_df = pd.DataFrame()
+
     for index, row in df.iterrows():
         messages = prompt.format_messages(topic=row['L1 Title'], format_instructions=format_instructions)
         response = chat_llm(messages)
         response_as_dict = new_parser.parse(response.content)
         data = response_as_dict
         convert_dict_to_csv(data)
-        test=pd.DataFrame(df.iloc[index]).T
-        data21 = pd.read_csv(r'data21.csv',encoding='cp1252')
+        test = pd.DataFrame(df.iloc[index]).T
+        data21 = pd.read_csv(r'data21.csv', encoding='cp1252')
         results = pd.concat([test, data21], axis=1).fillna(0)
-        results.to_csv('PA-results.csv', mode='a', header=not os.path.isfile('PA-results.csv'), index=False)
-    result=pd.read_csv(r"PA-results.csv")
+        result_df = pd.concat([result_df, results], ignore_index=True)
+
+    # Save the result_df to "PA-results.csv"
+    result_df.to_csv('PA-results.csv', mode='w', header=True, index=False)
+
+    # Read and display the result
+    result = pd.read_csv("PA-results.csv")
     st.subheader("L2 Title Result")
-    st.dataframe(result)  
+    st.dataframe(result)
     st.markdown(get_download_link(result), unsafe_allow_html=True)
 
 def intended_results_generator(df):
