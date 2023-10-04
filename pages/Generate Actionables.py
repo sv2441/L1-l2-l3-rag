@@ -10,6 +10,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.output_parsers import ResponseSchema
 from langchain.output_parsers import StructuredOutputParser
 from langchain.prompts import ChatPromptTemplate
+from langchain.output_parsers import OutputFixingParser
 import csv
 import os
 import base64
@@ -57,7 +58,7 @@ def prompta_generator(df):
     response_schemas = [ Action_schema]
     output_parser = StructuredOutputParser.from_response_schemas(response_schemas)
     format_instructions = output_parser.get_format_instructions()
-
+    new_parser = OutputFixingParser.from_llm(parser=output_parser, llm=ChatOpenAI())
     ###########################################################################
 
     title_template = """ \ You are an AI Governance bot.
@@ -71,7 +72,7 @@ def prompta_generator(df):
     for index, row in df.iterrows():
         messages = prompt.format_messages(topic=row['Regulatory text'], format_instructions=format_instructions)
         response = chat_llm(messages)
-        response_as_dict = output_parser.parse(response.content)
+        response_as_dict = new_parser.parse(response.content)
         data = response_as_dict
         convert_dict_to_csv(data)
         test=pd.DataFrame(df.iloc[index]).T
