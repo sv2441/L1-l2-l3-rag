@@ -145,7 +145,7 @@ def l1_title_generator(df):
     format_instructions = output_parser.get_format_instructions()
 
     title_template = """ \ You are an AI Governance bot.
-                Summarize actionable in max of 10 words for "{topic}". Ensure that the output has an action word.
+                Summarize actionable in max of 10 words for "{topic}".Ensure that the output has only one action verb.
                 
                {format_instructions}
                 """
