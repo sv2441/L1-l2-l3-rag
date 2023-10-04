@@ -236,34 +236,34 @@ def artefact_description_generator(df):
     # st.markdown(get_download_link(result), unsafe_allow_html=True)
     
     
-def specifications_generator(df):
-    Artefact_basis_schema = ResponseSchema(name="Specifications",
-                                description="Provide a name for Specifications")
+# def specifications_generator(df):
+#     Artefact_basis_schema = ResponseSchema(name="Specifications",
+#                                 description="Provide a name for Specifications")
 
-    response_schemas = [Artefact_basis_schema]
-    output_parser = StructuredOutputParser.from_response_schemas(response_schemas)
-    format_instructions = output_parser.get_format_instructions()
+#     response_schemas = [Artefact_basis_schema]
+#     output_parser = StructuredOutputParser.from_response_schemas(response_schemas)
+#     format_instructions = output_parser.get_format_instructions()
 
-    title_template = """ \ You are an AI Governance bot.
-                List any specific conditions or considerations mentioned in the following "{topic}".
-                Do not generalize. Do not exhibit any prior knowledge other than content provided above. Mention "no" in case there are no conditions
-                """
+#     title_template = """ \ You are an AI Governance bot.
+#                 List any specific conditions or considerations mentioned in the following "{topic}".
+#                 Do not generalize. Do not exhibit any prior knowledge other than content provided above. Mention "no" in case there are no conditions
+#                 """
 
-    prompt = ChatPromptTemplate.from_template(template=title_template)
+#     prompt = ChatPromptTemplate.from_template(template=title_template)
     
-    for index, row in df.iterrows():
-        messages = prompt.format_messages(topic=row["L2 Description"])
-        response = chat_llm(messages)
-        data = str(response.content)  # Convert data to string
-        dict_to_csv2(data, 'data26.csv', append=True)
-    data26 = pd.read_csv('data26.csv', names=['L2 Specifications'])
-    result = pd.concat([df, data26], axis=1)
-    result.to_csv('PA-results.csv', index=False)    
-    st.subheader("Specifications")
-    st.dataframe(result)
-    # final_result=pd.read_csv('PA-results.csv',usecols=['CO Level123 Code','Level','Code','Name','Description','Prompt A','L1 Description','L1 title','L1 Intended Results','L1 Artefact Description','L1 Specifications','L2 Description','L2 title','L2 Intended Results','L2 Artefact Description','L2 Specifications'])
+#     for index, row in df.iterrows():
+#         messages = prompt.format_messages(topic=row["L2 Description"])
+#         response = chat_llm(messages)
+#         data = str(response.content)  # Convert data to string
+#         dict_to_csv2(data, 'data26.csv', append=True)
+#     data26 = pd.read_csv('data26.csv', names=['L2 Specifications'])
+#     result = pd.concat([df, data26], axis=1)
+#     result.to_csv('PA-results.csv', index=False)    
+#     st.subheader("Specifications")
+#     st.dataframe(result)
+#     # final_result=pd.read_csv('PA-results.csv',usecols=['CO Level123 Code','Level','Code','Name','Description','Prompt A','L1 Description','L1 title','L1 Intended Results','L1 Artefact Description','L1 Specifications','L2 Description','L2 title','L2 Intended Results','L2 Artefact Description','L2 Specifications'])
     
-    st.markdown(get_download_link(result), unsafe_allow_html=True)
+#     st.markdown(get_download_link(result), unsafe_allow_html=True)
     
 
 
@@ -295,8 +295,8 @@ def main():
         if st.button("Generate Artefact Description"):
             artefact_description_generator(pd.read_csv('PA-results.csv'))
             
-        if st.button("Generate Specifications"):
-            specifications_generator(pd.read_csv('PA-results.csv'))
+        # if st.button("Generate Specifications"):
+        #     specifications_generator(pd.read_csv('PA-results.csv'))
             
         
 if __name__ == "__main__":
