@@ -165,6 +165,7 @@ def l2_title_generator(df):
         results.to_csv('PA-results.csv', mode='a', header=not os.path.isfile('PA-results.csv'), index=False)
     st.subheader("L2 Title Result")
     st.dataframe(results)  
+    st.markdown(get_download_link(result), unsafe_allow_html=True)
 
 def intended_results_generator(df):
     intended_results_schema = ResponseSchema(name="Intended Results",
