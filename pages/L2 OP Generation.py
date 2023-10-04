@@ -123,7 +123,7 @@ def description_generator(df):
     prompt = ChatPromptTemplate.from_template(template=title_template)
     
     for index, row in df.iterrows():
-        messages = prompt.format_messages(l2title=row["L2 title"], l1description=row["L1 Description"], format_instructions=format_instructions)
+        messages = prompt.format_messages(l2title=row["L2 Title"], l1description=row["L1 Description"], format_instructions=format_instructions)
         response = chat_llm(messages)
         response_as_dict = output_parser.parse(response.content)
         data = response_as_dict
