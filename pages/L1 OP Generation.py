@@ -233,9 +233,11 @@ def specifications_generator(df):
     output_parser = StructuredOutputParser.from_response_schemas(response_schemas)
     format_instructions = output_parser.get_format_instructions()
 
+     # List any specific conditions or considerations mentioned in the following "{topic}".
     title_template = """ \ You are an AI Governance bot.
-                List any specific conditions or considerations mentioned in the following "{topic}".
+                Extract information that reflects "how" or "when" to do the activity from "{topic}".
                 Do not generalize. Do not exhibit any prior knowledge other than content provided above. Mention "no" in case there are no conditions.
+                
                 """
 
     prompt = ChatPromptTemplate.from_template(template=title_template)
