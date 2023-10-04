@@ -159,7 +159,7 @@ def l1_title_generator(df):
         data = response_as_dict
         # convert_dict_to_csv(data)
         dict_to_csv(data, 'data13.csv', append=True)
-    data13 = pd.read_csv(r'data13.csv',encoding='cp1252',names=['L1 title'])
+    data13 = pd.read_csv(r'data13.csv',encoding='cp1252',names=['L1 Title'])
     results = pd.concat([df, data13], axis=1)
     results.to_csv("PA-results.csv")
     st.subheader("Description Result")
