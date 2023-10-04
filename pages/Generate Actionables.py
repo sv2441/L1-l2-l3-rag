@@ -32,7 +32,7 @@ def get_download_link(df):
 
 def convert_dict_to_csv(data_dict):
     with open('data11.csv', 'w', newline='') as csvfile:
-        fieldnames = ['Pre/Post', 'Activity']
+        fieldnames = ['Pre/Post', 'Actionable']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
         # Check if the file is empty and write the header only if it's empty
@@ -43,9 +43,9 @@ def convert_dict_to_csv(data_dict):
         for key, value in data_dict.items():
             if isinstance(value, list):
                 for item in value:
-                    writer.writerow({'Pre/Post': key, 'Activity': item})
+                    writer.writerow({'Pre/Post': key, 'Actionable': item})
             else:
-                writer.writerow({'Pre/Post': key, 'Activity': value})
+                writer.writerow({'Pre/Post': key, 'Actionable': value})
 
 def prompta_generator(df):
     
@@ -81,7 +81,7 @@ def prompta_generator(df):
         # test=pd.DataFrame(df.iloc[0]).T
         # results = pd.concat([test, data11], axis=1).fillna(0)
         results.to_csv('PA-results.csv', mode='a', header=not os.path.isfile('PA-results.csv'), index=False)
-    results=pd.read_csv("PA-results.csv")
+    results=pd.read_csv("PA-results.csv" , usecols=["Regulatory text","Actionable"]
     st.subheader("OP's")
     st.dataframe(results)
     st.markdown(get_download_link(results), unsafe_allow_html=True)
