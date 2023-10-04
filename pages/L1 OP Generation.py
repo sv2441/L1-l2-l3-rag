@@ -119,7 +119,6 @@ def description_generator(df):
             3) Provide a deeper understanding of what the activity entails
             4) Do not include expected outcome
             5) Do not include justification on why the activity should be implemented
-            Use words like establish, define, create, execute, perform, provide, validate, approve, review, monitor as action words.
             {format_instructions}
             """
     prompt = ChatPromptTemplate.from_template(template=title_template)
