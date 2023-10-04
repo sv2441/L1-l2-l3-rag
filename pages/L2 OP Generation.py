@@ -49,7 +49,7 @@ def get_download_link(df):
 
 def convert_dict_to_csv(data_dict):
     with open('data21.csv', 'w', newline='') as csvfile:
-        fieldnames = ['Pre', 'Actionable']
+        fieldnames = ['Pre', 'L2 Title']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
         # Check if the file is empty and write the header only if it's empty
@@ -60,9 +60,9 @@ def convert_dict_to_csv(data_dict):
         for key, value in data_dict.items():
             if isinstance(value, list):
                 for item in value:
-                    writer.writerow({'Pre': key, 'Actionable': item})
+                    writer.writerow({'Pre': key, 'L2 Title': item})
             else:
-                writer.writerow({'Pre': key, 'Actionable': value})
+                writer.writerow({'Pre': key, 'L2 Title': value})
 
 # def prompta_generator(df):
     
@@ -163,10 +163,10 @@ def l2_title_generator(df):
         data21 = pd.read_csv(r'data21.csv',encoding='cp1252')
         results = pd.concat([test, data21], axis=1).fillna(0)
         results.to_csv('PA-results.csv', mode='a', header=not os.path.isfile('PA-results.csv'), index=False)
-    results=pd.read_csv("PA-results.csv", sep='delimiter')
+    result=pd.read_csv(r"PA-results.csv")
     st.subheader("L2 Title Result")
-    st.dataframe(results)  
-    st.markdown(get_download_link(results), unsafe_allow_html=True)
+    st.dataframe(result)  
+    st.markdown(get_download_link(result), unsafe_allow_html=True)
 
 def intended_results_generator(df):
     intended_results_schema = ResponseSchema(name="Intended Results",
