@@ -23,7 +23,7 @@ os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
     
     
 chat_llm = ChatOpenAI(temperature=0.6)
-new_parser = OutputFixingParser.from_llm(parser=output_parser, llm=ChatOpenAI())
+
 
 def dict_to_csv(data, filename, append=False):
     mode = 'a' if append else 'w'
