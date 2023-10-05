@@ -14,7 +14,7 @@ from langchain.output_parsers import OutputFixingParser
 import csv
 import os
 import base64
-
+from datetime import datetime
 
 load_dotenv()
 
@@ -26,9 +26,11 @@ chat_llm = ChatOpenAI(temperature=0.6)
        
         
 def get_download_link(df):
+    current_datetime = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    file_name = f"Results_{current_datetime}.csv"
     csv = df.to_csv(index=False)
     b64 = base64.b64encode(csv.encode()).decode()
-    href = f'<a href="data:file/csv;base64,{b64}" download="PA-results.csv">Download CSV File</a>'
+    href = f'<a href="data:file/csv;base64,{b64}" download="{file_name}">Download CSV File</a>'    
     return href
 
 def convert_dict_to_csv(data_dict):
@@ -66,7 +68,6 @@ def prompta_generator(df):
                {format_instructions}
                 """
     prompt = ChatPromptTemplate.from_template(template=title_template)
-
 ##############################################################################################
     
     for index, row in df.iterrows():
@@ -77,13 +78,10 @@ def prompta_generator(df):
         convert_dict_to_csv(data)
         test=pd.DataFrame(df.iloc[index]).T
         data11 = pd.read_csv(r'data11.csv',encoding='cp1252')
-        results = pd.concat([test, data11], axis=1).fillna(0)
-        # result.to_csv('final1.csv')
-        # test=pd.DataFrame(df.iloc[0]).T
-        # results = pd.concat([test, data11], axis=1).fillna(0)
+        results = pd.concat([test, data11], axis=1)
         results.to_csv('PA-results.csv', mode='a', header=not os.path.isfile('PA-results.csv'), index=False)
-    results=pd.read_csv("PA-results.csv" , usecols=["Regulatory text","Actionables"])
-    st.subheader("OP's")
+    results=pd.read_csv("PA-results.csv",usecols=["Regulatory text","Actionables"])
+    st.subheader("Actionables")
     st.dataframe(results)
     st.markdown(get_download_link(results), unsafe_allow_html=True)
     
