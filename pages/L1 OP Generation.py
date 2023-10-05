@@ -42,9 +42,11 @@ def dict_to_csv2(data, filename, append=False):
         writer.writerow({'L1 Intended Results': data})       
         
 def get_download_link(df):
+    current_datetime = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    file_name = f"Results_{current_datetime}.csv"
     csv = df.to_csv(index=False)
     b64 = base64.b64encode(csv.encode()).decode()
-    href = f'<a href="data:file/csv;base64,{b64}" download="PA-results.csv">Download CSV File</a>'
+    href = f'<a href="data:file/csv;base64,{b64}" download="{file_name}">Download CSV File</a>' 
     return href
 
 # def convert_dict_to_csv(data_dict):
